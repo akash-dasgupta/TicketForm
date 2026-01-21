@@ -26,16 +26,16 @@ class TicketController extends Controller
         return view('supportform');
     }
 
-    public function getFormData(Request $formdata)
+    public function getFormData(Request $request)
     {
-        $formdata = $formdata->validate([
+        $formdata = $request->validate([
             'name'=>'required|string|max:100',
             'email'=>'required|string|max:100',
             'phone'=>'required|string|max:100',
             'message'=>'required|string|max:1000' 
            // 'attachment'=>'file|max:10240' // max 10MB 
             ]);
-        $data->formdata=$formdata;    
+        $request->session()->put('formdata', $formdata);
         return redirect()->route('send.email');
     }
    
@@ -51,7 +51,7 @@ class TicketController extends Controller
     
     public function thanks(Request $request)
     {
-        $data=$data->formdata->all(); 
+        $data = $request->session()->get('formdata'); 
         
         if(!$request->has('code')){
             return redirect()->route('supportform')->with('error','Authorization code is missing. Please try again.');
@@ -60,21 +60,21 @@ class TicketController extends Controller
         $this->client->setAccessToken($token);
 
         $to=['akashtester15@gmail.com']; //Which address to send the mail
-        $subject='New Support Ticket Created';
+        $subject='New Support Ticket From: '.$data['name'];
         $messagebody='A new ticket has been raised!<br/>';
 
         $message=new Message();
 
-       // $rawmessagestring= "From: ".$request->data['email']."\r\n";
+        $rawmessagestring= "From: Support Ticket\r\n";
         $rawmessagestring= "To: ".implode(",",$to)."\r\n";
         $rawmessagestring.= "Subject: ".$subject."\r\n";
         $rawmessagestring.= "MIME-Version: 1.0\r\n";
         $rawmessagestring.= "Content-Type: text/html; charset=UTF-8\r\n\r\n";
         $rawmessagestring.= "<p>".$messagebody."</p><br/>";
         $rawmessagestring.= "Name: ".$data['name']."<br/>";
-        //$rawmessagestring.= "E-Mail: ".$this->data['email']."<br/>";
-        //$rawmessagestring.= "Phone: ".$this->data['phone']."<br/>";
-        //$rawmessagestring.= "Message: ".$this->data['message']."<br/>";
+        $rawmessagestring.= "E-Mail: ".$data['email']."<br/>";
+        $rawmessagestring.= "Phone: ".$data['phone']."<br/>";
+        $rawmessagestring.= "Message: ".$data['message']."<br/>";
 
         // $message->setraw($rawmessagestring);
         /*try {
