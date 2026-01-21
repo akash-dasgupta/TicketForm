@@ -61,22 +61,33 @@ class TicketController extends Controller
 
         $to=['akashtester15@gmail.com']; //Which address to send the mail
         $subject='New Support Ticket From: '.$data['name'];
-        $messagebody='A new ticket has been raised!<br/>';
+            
+        // $messagetext.= "To: ".implode(",",$to)."\r\n";
+        // $messagetext.= "Subject: ".$subject."\r\n";
+        // $messagetext = "MIME-Version: 1.0\r\n";
+        // $messagetext.= "Content-Type: text/html; charset: UTF-8\r\n\r\n";
+        $messagetext = "<h1><p>A new ticket has been raised!</p></h1><br/>";
+        $messagetext.= "Name: ".$data['name']."<br/>";
+        $messagetext.= "E-Mail: ".$data['email']."<br/>";
+        $messagetext.= "Phone: ".$data['phone']."<br/>";
+        $messagetext.= "Message: ".$data['message']."<br/>";
 
-        $message=new Message();
+        $boundary = uniqid(rand(), true);
 
-        $rawmessagestring= "From: Support Ticket\r\n";
-        $rawmessagestring= "To: ".implode(",",$to)."\r\n";
-        $rawmessagestring.= "Subject: ".$subject."\r\n";
-        $rawmessagestring.= "MIME-Version: 1.0\r\n";
-        $rawmessagestring.= "Content-Type: text/html; charset=UTF-8\r\n\r\n";
-        $rawmessagestring.= "<p>".$messagebody."</p><br/>";
-        $rawmessagestring.= "Name: ".$data['name']."<br/>";
-        $rawmessagestring.= "E-Mail: ".$data['email']."<br/>";
-        $rawmessagestring.= "Phone: ".$data['phone']."<br/>";
-        $rawmessagestring.= "Message: ".$data['message']."<br/>";
+        $messagebody = "--".$boundary."\r\n";
+        $messagebody .= "Content-Type: text/html; charset: UTF-8\r\n";
+        $messagebody .= "Content-Transfer-Encoding: quoted-printable\r\n\r\n";
+        $messagebody .= $messagetext . "\r\n";
+        $messagebody .= "--".$boundary."--";
 
-        // $message->setraw($rawmessagestring);
+        $rawmessage = "From: Support Ticket\r\n";
+        $rawmessage .= "To: ".implode(",",$to)."\r\n";
+        $rawmessage .= "Subject: ".$subject."\r\n";
+        $rawmessage .= "MIME-Version: 1.0\r\n";
+        $rawmessage .= "Content-Type: multipart/mixed; boundary=\"".$boundary."\"\r\n\r\n";
+        $rawmessage .= $messagebody;
+
+        // $message->setraw($messagetext);
         /*try {
             if($request->hasFile('attachment')){
                 $filename = time().'.'.$request->file('attachment')->extension();   
@@ -88,8 +99,8 @@ class TicketController extends Controller
         //dd($data);
         \Notification::route('mail', 'akashtester15@gmail.com')->notify(new SendForm($data));
         return redirect()->route('thanks');*/
-
-        $rawmessage=base64_encode($rawmessagestring);
+        $message=new Message();
+        $rawmessage=base64_encode($rawmessage);
         $rawmessage=str_replace(['+','/','='],['-','_',''], $rawmessage);
         $message->setRaw($rawmessage);
 
