@@ -7,9 +7,12 @@ use App\Notifications\SendForm;
 use Google\Client;
 use Google\Service\Gmail;
 use Google\Service\Gmail\Message;
+
 class TicketController extends Controller
 {
     private $client;
+    public $filename;
+
     public function __construct()
     {
         $this->client = new Client();
@@ -32,9 +35,15 @@ class TicketController extends Controller
             'name'=>'required|string|max:100',
             'email'=>'required|string|max:100',
             'phone'=>'required|string|max:100',
-            'message'=>'required|string|max:1000' 
-           // 'attachment'=>'file|max:10240' // max 10MB 
+            'message'=>'required|string|max:1000',
+            // 'attachment'=>'file|max:10240' // max 10MB 
             ]);
+        $request->validate(['attachment'=>'file|max:10240']); // max 10MB
+    if($request->hasFile('attachment')){
+        $this->filename = 'example.'. $request->file('attachment')->extension();   
+        $request->file('attachment')->move(public_path('attachments'), $this->filename);  
+        $request->session()->put('filename', $this->filename);      
+    }
         $request->session()->put('formdata', $formdata);
         return redirect()->route('send.email');
     }
@@ -52,6 +61,7 @@ class TicketController extends Controller
     public function thanks(Request $request)
     {
         $data = $request->session()->get('formdata'); 
+        $this->filename = $request->session()->get('filename');
         
         if(!$request->has('code')){
             return redirect()->route('supportform')->with('error','Authorization code is missing. Please try again.');
@@ -72,13 +82,30 @@ class TicketController extends Controller
         $messagetext.= "Phone: ".$data['phone']."<br/>";
         $messagetext.= "Message: ".$data['message']."<br/>";
 
+        // Attachment handling
+        $filepath = ''.public_path('attachments/').$this->filename;
+            $filedata = file_get_contents($filepath);
+            $attachedname = basename($filepath);
+           // $encodedfile = base64_encode($filedata);
+         //   $filedata = str_replace(['+','/','='],['-','_',''], $filedata);
+        
+
         $boundary = uniqid(rand(), true);
 
         $messagebody = "--".$boundary."\r\n";
         $messagebody .= "Content-Type: text/html; charset: UTF-8\r\n";
         $messagebody .= "Content-Transfer-Encoding: quoted-printable\r\n\r\n";
         $messagebody .= $messagetext . "\r\n";
-        $messagebody .= "--".$boundary."--";
+        
+
+        if(file_exists($filepath)){
+            $messagebody .= "--".$boundary."\r\n";
+            $messagebody .= "Content-Type: application/txt; name={$attachedname}\r\n";
+            $messagebody .= "Content-Disposition: attachment; filename={$attachedname}; filesize=".filesize($filepath)."\r\n\r\n";
+           // $messagebody .= "Content-Transfer-Encoding: base64\r\n";
+            $messagebody .= "{$filedata}.\r\n";
+            $messagebody .= "--".$boundary."--";
+        }
 
         $rawmessage = "From: Support Ticket\r\n";
         $rawmessage .= "To: ".implode(",",$to)."\r\n";
