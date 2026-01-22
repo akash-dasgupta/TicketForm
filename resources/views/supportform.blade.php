@@ -34,7 +34,7 @@
 
   <div>
   <label for="message" class="block mb-1">Message:</label>
-  <textarea id="message" name="message" rows="4" class="border border-gray-300 rounded px-2 py-1 w-full"></textarea>
+  <textarea id="message" name="message" rows="2" class="border border-gray-300 rounded px-2 py-1 w-full"></textarea>
   </div>
 
   <div>
