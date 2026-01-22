@@ -1,0 +1,41 @@
+Ticket Pager form
+------------------
+Name:
+E-Mail:
+Comment:
+Attach: <Attach Button>
+<Submit Button>
+
+Return:
+-------
+Ticket has been submitted successfully.
+(Send all of the response to client handler webpage, send a notification with link to E-Mail.
+*Stick with sending entire form response to the E-Mail for now.)
+
+===========================================================================================================================================================
+Status: Entire form response is sent to the specified mail in the notification API. Sender is set on a GMail SMTP server using app password feature on the Google account (Requires 2FA).
+===========================================================================================================================================================
+
+*Provide attach button on the form.
+===========================================================================================================================================================
+Hint: Simple SMTP won't do this job. Try to integrate GMail or Outlook API instead.(Possibly install packages and insert them in code like any other function)
+===========================================================================================================================================================
+
+*Decorate your form.
+===========================================================================================================================================================
+Hint: Try Tailwind CSS. They provide a good amount of CSS parameters by means of importing a script, which allows you to put them in the "div class" attribute.
+===========================================================================================================================================================
+
+*Go Global. Host your project from the server to the campus network.
+
+Draft:
+------
+1. click to post data
+2. save in $data
+3. after save, change route to GET 'send-email' page
+4. auth token saved -> GET 'thanks' page which will catch $data[element].
+
+===========================================================================================================================================================
+Status: Successfully used Gmail API to send form data in text/HTML format. File attachments are still pending.
+Update: Ticket posting has been done successfully with attachments.
+===========================================================================================================================================================
