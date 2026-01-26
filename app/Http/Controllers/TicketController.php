@@ -83,12 +83,13 @@ class TicketController extends Controller
         $messagetext.= "Message: ".$data['message']."<br/>";
 
         // Attachment handling
+        if($this->filename){
         $filepath = ''.public_path('attachments/').$this->filename;
             $filedata = file_get_contents($filepath);
             $attachedname = basename($filepath);
            // $encodedfile = base64_encode($filedata);
          //   $filedata = str_replace(['+','/','='],['-','_',''], $filedata);
-        
+        }
 
         $boundary = uniqid(rand(), true);
 
@@ -98,7 +99,7 @@ class TicketController extends Controller
         $messagebody .= $messagetext . "\r\n";
         
 
-        if(file_exists($filepath)){
+        if($this->filename && file_exists($filepath)){
             $messagebody .= "--".$boundary."\r\n";
             $messagebody .= "Content-Type: application/txt; name={$attachedname}\r\n";
             $messagebody .= "Content-Disposition: attachment; filename={$attachedname}; filesize=".filesize($filepath)."\r\n\r\n";
