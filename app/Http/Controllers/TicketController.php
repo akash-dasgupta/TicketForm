@@ -90,13 +90,13 @@ class TicketController extends Controller
 
         $bcc=['akashtester15@gmail.com']; //Bcc to admin
         $to=[$data['email']]; //Form response to the user who raised the ticket
-        $subject='New Support Ticket From: '.$data['name'];
+        $subject='New Support Ticket'.($ticket ? " #".$ticket->ticket_id : "").' From: '.$data['name'];
             
         // $messagetext.= "To: ".implode(",",$to)."\r\n";
         // $messagetext.= "Subject: ".$subject."\r\n";
         // $messagetext = "MIME-Version: 1.0\r\n";
         // $messagetext.= "Content-Type: text/html; charset: UTF-8\r\n\r\n";
-        $messagetext = "<h1><p>A new ticket".($ticket ? " #".$ticket->ticket_id : "")." has been raised!</p></h1><br/>";
+        $messagetext = "<h1><p>A new ticket has been raised!</p></h1><br/>";
         $messagetext.= "Name: ".$data['name']."<br/>";
         $messagetext.= "E-Mail: ".$data['email']."<br/>";
         $messagetext.= "Phone: ".$data['phone']."<br/>";
