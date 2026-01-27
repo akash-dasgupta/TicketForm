@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Ticket;
 use App\Notifications\SendForm;
 use Google\Client;
 use Google\Service\Gmail;
@@ -45,6 +47,21 @@ class TicketController extends Controller
         $request->session()->put('filename', $this->filename);      
     }
         $request->session()->put('formdata', $formdata);
+
+        // Push the validated data to the database
+        if($request->submit){
+            $ticket = new Ticket();
+            $ticket->name = $formdata['name'];
+            $ticket->email = $formdata['email'];
+            $ticket->phone = $formdata['phone'];
+            $ticket->message = $formdata['message'];
+            if($this->filename){
+                $ticket->attachment = $this->filename;
+            }
+            $ticket->save();
+        }
+
+        // Once posting is done, redirect to send email
         return redirect()->route('send.email');
     }
    
@@ -62,6 +79,8 @@ class TicketController extends Controller
     {
         $data = $request->session()->get('formdata'); 
         $this->filename = $request->session()->get('filename');
+
+        $ticket = DB::table('collected_tickets')->latest('ticket_id')->first();
         
         if(!$request->has('code')){
             return redirect()->route('supportform')->with('error','Authorization code is missing. Please try again.');
@@ -69,14 +88,15 @@ class TicketController extends Controller
         $token=$this->client->fetchAccessTokenWithAuthCode($request->input('code'));
         $this->client->setAccessToken($token);
 
-        $to=['akashtester15@gmail.com']; //Which address to send the mail
+        $bcc=['akashtester15@gmail.com']; //Bcc to admin
+        $to=[$data['email']]; //Form response to the user who raised the ticket
         $subject='New Support Ticket From: '.$data['name'];
             
         // $messagetext.= "To: ".implode(",",$to)."\r\n";
         // $messagetext.= "Subject: ".$subject."\r\n";
         // $messagetext = "MIME-Version: 1.0\r\n";
         // $messagetext.= "Content-Type: text/html; charset: UTF-8\r\n\r\n";
-        $messagetext = "<h1><p>A new ticket has been raised!</p></h1><br/>";
+        $messagetext = "<h1><p>A new ticket".($ticket ? " #".$ticket->ticket_id : "")." has been raised!</p></h1><br/>";
         $messagetext.= "Name: ".$data['name']."<br/>";
         $messagetext.= "E-Mail: ".$data['email']."<br/>";
         $messagetext.= "Phone: ".$data['phone']."<br/>";
@@ -110,6 +130,7 @@ class TicketController extends Controller
 
         $rawmessage = "From: Support Ticket\r\n";
         $rawmessage .= "To: ".implode(",",$to)."\r\n";
+        $rawmessage .= "Bcc: ".implode(",",$bcc)."\r\n";
         $rawmessage .= "Subject: ".$subject."\r\n";
         $rawmessage .= "MIME-Version: 1.0\r\n";
         $rawmessage .= "Content-Type: multipart/mixed; boundary=\"".$boundary."\"\r\n\r\n";
@@ -135,6 +156,11 @@ class TicketController extends Controller
         $gmail=new Gmail($this->client);
         try{
             $gmail->users_messages->send('me',$message);
+
+            // Reset session data after successful email send
+            $request->session()->forget(['formdata', 'filename']);
+            $this->filename = null;
+
             return view('thanks');
         }catch(\Exception $e){
             return 'Failed to send email: '.$e->getMessage();
