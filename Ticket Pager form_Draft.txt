@@ -12,19 +12,19 @@ Ticket has been submitted successfully.
 (Send all of the response to client handler webpage, send a notification with link to E-Mail.
 *Stick with sending entire form response to the E-Mail for now.)
 
-===========================================================================================================================================================
+==============================================================================================================================
 Status: Entire form response is sent to the specified mail in the notification API. Sender is set on a GMail SMTP server using app password feature on the Google account (Requires 2FA).
-===========================================================================================================================================================
+==============================================================================================================================
 
 *Provide attach button on the form. (Attach button added)
-===========================================================================================================================================================
+==============================================================================================================================
 Hint: Simple SMTP won't do this job. Try to integrate GMail or Outlook API instead.(Possibly install packages and insert them in code like any other function)
-===========================================================================================================================================================
+==============================================================================================================================
 
 *Decorate your form. (Decoration Complete)
-===========================================================================================================================================================
+==============================================================================================================================
 Hint: Try Tailwind CSS. They provide a good amount of CSS parameters by means of importing a script, which allows you to put them in the "div class" attribute.
-===========================================================================================================================================================
+==============================================================================================================================
 
 *Go Global. Host your project from the server to the campus network.
 
@@ -35,15 +35,28 @@ Draft:
 3. after save, change route to GET 'send-email' page
 4. auth token saved -> GET 'thanks' page which will catch $data[element].
 
-===========================================================================================================================================================
+==============================================================================================================================
 Status: Successfully used Gmail API to send form data in text/HTML format. File attachments are still pending.
 Update: Ticket posting has been done successfully with attachments.
-===========================================================================================================================================================
+==============================================================================================================================
 
-* New Tasks:
+New Tasks:
 ------------
 1. Save the form response in database. (Successful)
-2. create another view with tables. Retrieve the DB query to the table.
+2. create another view with tables. Retrieve the DB query to the table. (Successful)
 3. Generate a ticket ID everytime the form is submitted and send back to the E-Mail. (Successful)
-4. Use this very ticket ID to search and list the queries.
+4. Use this very ticket ID to search and list the queries. (Successful)
 5. Add the email entered in the form to the Cc of the recipient list. (Successful: Using Bcc trick, Admin gets a copy and form email is the recipient of the response)
+
+==============================================================================================================================
+Status(28/01/2026): Created a new admin interface for tickets, which retrieves all tickets from sqlite database.
+Added a search feature, which searches based on the given attributes in option.
+==============================================================================================================================
+
+* Tasks:
+--------
+1. Provide a link in the E-Mail to access the admin portal. (Going global with the project is required) (Successful, globalization yet to be implemented)
+2. Each ticket ID will have a hyperlink, routing to the specific page under the same portal, where ticket info would be printed in detail and a messagebox for reply.
+    On submission, E-Mail is sent and reply is stored in the database. (Hint: Database entry update comes in)
+3. Add Authentication scaffolding for the admin portal.
+4. Try to migrate the sending work to Microsoft Graph API.

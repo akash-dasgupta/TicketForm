@@ -101,6 +101,7 @@ class TicketController extends Controller
         $messagetext.= "E-Mail: ".$data['email']."<br/>";
         $messagetext.= "Phone: ".$data['phone']."<br/>";
         $messagetext.= "Message: ".$data['message']."<br/>";
+        $reference = "<p>To view or respond to the ticket, please <a href='https://ticketform.laravel.com:5100/tickets'>login</a> to the support ticket system<br/></p>";
 
         // Attachment handling
         if($this->filename){
@@ -112,21 +113,27 @@ class TicketController extends Controller
         }
 
         $boundary = uniqid(rand(), true);
+        $alternativeBoundary = uniqid(rand(), true);
 
+        // Start multipart/alternative for HTML version
         $messagebody = "--".$boundary."\r\n";
-        $messagebody .= "Content-Type: text/html; charset: UTF-8\r\n";
-        $messagebody .= "Content-Transfer-Encoding: quoted-printable\r\n\r\n";
-        $messagebody .= $messagetext . "\r\n";
+        $messagebody .= "Content-Type: multipart/alternative; boundary=\"".$alternativeBoundary."\"\r\n\r\n";
         
-
-        if($this->filename && file_exists($filepath)){
-            $messagebody .= "--".$boundary."\r\n";
-            $messagebody .= "Content-Type: application/txt; name={$attachedname}\r\n";
-            $messagebody .= "Content-Disposition: attachment; filename={$attachedname}; filesize=".filesize($filepath)."\r\n\r\n";
-           // $messagebody .= "Content-Transfer-Encoding: base64\r\n";
-            $messagebody .= "{$filedata}.\r\n";
-            $messagebody .= "--".$boundary."--";
-        }
+        // Plain text version
+        $messagebody .= "--".$alternativeBoundary."\r\n";
+        $messagebody .= "Content-Type: text/plain; charset: UTF-8\r\n";
+        $messagebody .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+        $messagebody .= strip_tags($messagetext) . "\r\n";
+        $messagebody .= strip_tags($reference) . "\r\n";
+        
+        // HTML version
+        $messagebody .= "--".$alternativeBoundary."\r\n";
+        $messagebody .= "Content-Type: text/html; charset: UTF-8\r\n";
+        $messagebody .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+        $messagebody .= $messagetext . "\r\n";
+        $messagebody .= $reference. "\r\n";
+        $messagebody .= "--".$alternativeBoundary."--\r\n";
+        
 
         $rawmessage = "From: Support Ticket\r\n";
         $rawmessage .= "To: ".implode(",",$to)."\r\n";
@@ -135,6 +142,16 @@ class TicketController extends Controller
         $rawmessage .= "MIME-Version: 1.0\r\n";
         $rawmessage .= "Content-Type: multipart/mixed; boundary=\"".$boundary."\"\r\n\r\n";
         $rawmessage .= $messagebody;
+
+        if($this->filename && file_exists($filepath)){
+            $rawmessage .= "--".$boundary."\r\n";
+            $rawmessage .= "Content-Type: application/txt; name={$attachedname}\r\n";
+            $rawmessage .= "Content-Disposition: attachment; filename={$attachedname}; filesize=".filesize($filepath)."\r\n\r\n";
+            $rawmessage .= "{$filedata}.\r\n";
+            $rawmessage .= "--".$boundary."--";
+        } else {
+            $rawmessage .= "--".$boundary."--";
+        }
 
         // $message->setraw($messagetext);
         /*try {
@@ -149,8 +166,7 @@ class TicketController extends Controller
         \Notification::route('mail', 'akashtester15@gmail.com')->notify(new SendForm($data));
         return redirect()->route('thanks');*/
         $message=new Message();
-        $rawmessage=base64_encode($rawmessage);
-        $rawmessage=str_replace(['+','/','='],['-','_',''], $rawmessage);
+        $rawmessage = rtrim(strtr(base64_encode($rawmessage), '+/', '-_'), '=');
         $message->setRaw($rawmessage);
 
         $gmail=new Gmail($this->client);

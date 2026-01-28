@@ -1,29 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @vite('resources/css/app.css')
+  </head>
+    <body class="flex flex-col items-center justify-center min-h-screen">
+<!-- The best way to predict the future is to invent it. - Alan Kay -->
+      
+
+<!-- Ticket Table -->
 <div>
     <!-- Life is available only in the present moment. - Thich Nhat Hanh -->
-    <center><h1>Raised Tickets</h1></center>
-    <table>
+    <h1 class="text-3xl text-center font-bold underline centered m-4">Raised Tickets</h1>
+      <div class="card">
+            <div class="card-header">
+                <h4 class="text-xl font-semibold mb-2">
+                    Search Tickets
+                </h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('ticket.view') }}" method="GET" class="form-inline">
+                    <div class="form-group mb-2 grid grid-cols-6 gap-2">
+                        <select name="criteria" id="criteria" class="border border-gray-300 rounded px-2 py-1 col-span-1">
+                            <option value="ticket_id">Ticket ID</option>
+                            <option value="name">Name</option>
+                            <option value="email">Email</option>
+                            <option value="phone">Phone</option>
+                            <option value="message">Message</option>
+                        </select>
+                        <input type="text" id="search" name="search" class="border border-gray-300 rounded px-2 py-1 col-span-4">
+                        <button type="submit" class="bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer col-span-1">Search</button>
+                        <script>
+                        var form = document.getElementByTagName("search");
+                        form.reset();
+                        </script>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <table class="table-auto text-center border-collapse border border-gray-400 border-spacing-2 p-4">
         <thead>
             <tr>
-                <th>Ticket ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Message</th>
-                <th>Attachment</th>
+                <th class="center border border-gray-400 p-2">Ticket ID</th>
+                <th class="center border border-gray-400 p-2">Name</th>
+                <th class="border border-gray-400 p-2">Email</th>
+                <th class="border border-gray-400 p-2">Phone</th>
+                <th class="border border-gray-400 p-2">Message</th>
+                <th class="border border-gray-400 p-2">Attachment</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($tickets as $ticket)
+            @foreach ($tickets as $tickets)
             <tr>
-                <td>{{ $ticket->ticket_id }}</td>
-                <td>{{ $ticket->name }}</td>
-                <td>{{ $ticket->email }}</td>
-                <td>{{ $ticket->phone }}</td>
-                <td>{{ $ticket->message }}</td>
-                <td>{{ $ticket->attachment }}</td>
+                <td class="border border-gray-400 p-2">{{ $tickets->ticket_id }}</td>
+                <td class="border border-gray-400 p-2">{{ $tickets->name }}</td>
+                <td class="border border-gray-400 p-2">{{ $tickets->email }}</td>
+                <td class="border border-gray-400 p-2">{{ $tickets->phone }}</td>
+                <td class="border border-gray-400 p-2">{{ $tickets->message }}</td>
+                <td class="border border-gray-400 p-2">{{ $tickets->attachment }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
 </div>
+</body>
+</html>
