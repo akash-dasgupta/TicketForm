@@ -10,19 +10,20 @@
     @vite('resources/css/app.css')
   </head>
   <body class="flex flex-col items-center justify-center min-h-screen">
+    
     <h1 class="text-3xl text-center font-bold underline centered m-4">
       Support Ticket Form
     </h1>
 
     <div class="m-4 p-4 border border-gray-300 rounded w-md justify-center">
     <!-- Live as if you were to die tomorrow. Learn as if you were to live forever. - Mahatma Gandhi -->
-     <form action="{{ route('form.data') }}" method="post" enctype="multipart/form-data" id="ticketForm" class="grid grid-rows-5">
+  <form action="{{ route('form.data') }}" method="post" enctype="multipart/form-data" id="ticketForm" class="grid grid-rows-5">
         @csrf
         <div>
           <label for="name" class="block mb-1">Name:</label>
           <input type="text" id="name" name="name" class="border border-gray-300 rounded px-2 py-1 w-full">
         </div>
- <div>
+  <div>
   <label for="email" class="block mb-1">E-Mail:</label>
   <input type="text" id="email" name="email" class="border border-gray-300 rounded px-2 py-1 w-full">
   </div>
@@ -45,9 +46,16 @@
   <div>
   <input type="submit" value="Submit" name="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">
   </div>
-</form>
+  </form>
 
-</div>
+  </div>
+
+  <div>
+    <h2 class="text-xl text-right font-bold m-4">
+      Click <a href="{{ route('ticket.view') }}" class="text-blue-600 hover:underline">here</a> for Admin.
+    </h2>
+  </div>
+
   </body>
 </html>
 
