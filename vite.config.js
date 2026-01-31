@@ -22,7 +22,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl';
 import tailwindcss from "@tailwindcss/vite";
 
 // 002 set the Laravel host and the port
-const host = '10.10.9.147';
+const host = '10.10.1.5';
 const port = '8000';
 
 
@@ -38,6 +38,7 @@ export default defineConfig({
     ],
     // 006 setting the proxy with Laravel as target (origin) (target)
     server: {
+        cors: true,
         https: true,
         proxy: {
             '^(?!(\/\@vite|\/resources|\/node_modules))': {
