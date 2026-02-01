@@ -8,7 +8,7 @@
             <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
                 Email
             </label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" name="email" required autofocus>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
             </div>
             <div class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
@@ -21,5 +21,10 @@
                 Login
             </button>
         </form>
+
+        <div class="flex text-center justify-between">
+            <button class="bg-green-600 text-white rounded hover:bg-blue-700 cursor-pointer font-bold py-2 px-4 focus:outline-none focus:shadow-outline" onclick="window.location.href='{{ route('view.register') }}'">
+                Register
+            </button>
     </div>
 </x-layout>
