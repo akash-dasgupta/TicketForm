@@ -58,5 +58,6 @@ Added a search feature, which searches based on the given attributes in option.
 1. Provide a link in the E-Mail to access the admin portal. (Going global with the project is required) (Successful, globalization yet to be implemented)
 2. Each ticket ID will have a hyperlink, routing to the specific page under the same portal, where ticket info would be printed in detail and a messagebox for reply.
     On submission, E-Mail is sent and reply is stored in the database. (Hint: Database entry update comes in)
-3. Add Authentication scaffolding for the admin portal.
+    Also make sure to add ticket status along with it to update to the database.
+3. Add Authentication scaffolding for the admin portal. (Successful)
 4. Try to migrate the sending work to Microsoft Graph API.

@@ -8,37 +8,36 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function stafflogin()
+    public function staffloginview()
     {
         return view('auth.staff-login');
     }
 
-    public function staffregister()
+    public function staffregisterview()
     {
         return view('auth.staff-register');
     }
 
-    public function staffregisterpost(Request $request)
+    public function staffregister(Request $request)
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
-            'confirm_password' => 'required|string|min:6',
-            'password' => 'required|string|min:6|confirmed|same:confirm_password',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         $user = User::create($validatedData);
 
         Auth::login($user);
 
-        return redirect('/tickets');
+        return redirect('/staff-login')->with('success', 'Registration successful. Please log in.');
     }
 
-    public function staffloginpost(Request $request)
+    public function stafflogin(Request $request)
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
         ]);
 
         if (auth()->attempt($credentials)) {
@@ -47,9 +46,16 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Invalid email or password. Try Again.',
         ])->onlyInput('email');
     }
 
-    
+    public function stafflogout(Request $request)
+    {
+        Auth::logout(); // Log out the user
+        $request->session()->invalidate(); // Delete session cookies
+        $request->session()->regenerateToken(); // Regenerate CSRF token
+        return redirect('/staff-login'); // Redirect to login page
+    }
+
 }

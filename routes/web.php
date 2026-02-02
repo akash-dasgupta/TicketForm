@@ -23,11 +23,13 @@ Route::get('send-email',[TicketController::class,'sendEmail'])->name('send.email
 Route::get('/support/thanks', [TicketController::class,'thanks'])->name('thanks');
 
 // Route::get('/tickets/{ticket_id}', [TicketViewer::class,'viewticket'])->name('ticket.view.single');
-Route::get('/staff-login', [AuthController::class,'stafflogin'])->name('view.login');
-Route::get('/staff-register', [AuthController::class,'staffregister'])->name('view.register');
-Route::post('staff.login', [AuthController::class,'staffloginpost'])->name('staff.login');
-Route::post('staff.register', [AuthController::class,'staffregisterpost'])->name('staff.register');
-Route::get('/tickets', [TicketViewer::class,'ticketlist'])->name('ticket.view');
+Route::get('/staff-login', [AuthController::class,'staffloginview'])->name('login');
+Route::get('/staff-register', [AuthController::class,'staffregisterview'])->name('view.register');
+Route::post('staff.login', [AuthController::class,'stafflogin'])->name('staff.login');
+Route::post('staff.register', [AuthController::class,'staffregister'])->name('staff.register');
+Route::get('/tickets', [TicketViewer::class,'ticketlist'])->name('ticket.view')->middleware('auth');
+Route::post('staff.logout', [AuthController::class,'stafflogout'])->name('staff.logout');
+
 
 Route::get('queue-api', function ()
 {

@@ -26,17 +26,18 @@
             </div>
 
             <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm_password">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="password_confirmation">
                 Confirm Password
             </label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="confirm_password" type="password" name="confirm_password" required>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password_confirmation" type="password" name="password_confirmation" required>
             </div>
 
             <div class="flex items-center justify-between">
             <button class="bg-green-600 text-white rounded hover:bg-blue-700 cursor-pointer font-bold py-2 px-4 focus:outline-none focus:shadow-outline" type="submit">
                 Register
             </button>
-
+            </div>
+            <div>
             @if($errors->any())
                 <div class="mt-4 text-red-500">
                     <ul>
@@ -46,10 +47,11 @@
                     </ul>
                 </div>
             @endif
+            </div>
         </form>
 
         <div class="flex text-center justify-between">
-            <button class="bg-green-600 text-white rounded hover:bg-blue-700 cursor-pointer font-bold py-2 px-4 focus:outline-none focus:shadow-outline" onclick="window.location.href='{{ route('view.login') }}'">
+            <button class="bg-green-600 text-white rounded hover:bg-blue-700 cursor-pointer font-bold py-2 px-4 focus:outline-none focus:shadow-outline" onclick="window.location.href='{{ route('login') }}'">
                 Login
             </button>
         </div>

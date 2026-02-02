@@ -52,7 +52,7 @@
 
   <div>
     <h2 class="text-xl text-right font-bold m-4">
-      Click <a href="{{ route('ticket.view') }}" class="text-blue-600 hover:underline">here</a> for Admin.
+      Click <a href="{{ route('login') }}" class="text-blue-600 hover:underline">here</a> for Staff.
     </h2>
   </div>
 

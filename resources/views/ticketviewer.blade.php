@@ -12,6 +12,23 @@
 <!-- Ticket Table -->
 <div>
     <!-- Life is available only in the present moment. - Thich Nhat Hanh -->
+    <nav>
+        <ul class="flex space-x-4 justify-end m-4">
+            <li>
+                @auth
+                    <span class="border-r-2 pr-2">
+                        Welcome, {{ auth()->user()->name }}
+                    </span>
+                    <form method="POST" action="{{ route('staff.logout') }}" class="inline">
+                        @csrf
+                    <button type="submit" class="text-black rounded hover:bg-red-600 hover:text-white cursor-pointer font-bold py-2 px-4 focus:outline-none focus:shadow-outline">
+                        Logout
+                    </button>
+                    </form>
+                @endauth
+            </li>
+        </ul>
+    </nav>
     <h1 class="text-3xl text-center font-bold underline centered m-4">Raised Tickets</h1>
       <div class="card">
             <div class="card-header">

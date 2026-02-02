@@ -26,5 +26,23 @@
             <button class="bg-green-600 text-white rounded hover:bg-blue-700 cursor-pointer font-bold py-2 px-4 focus:outline-none focus:shadow-outline" onclick="window.location.href='{{ route('view.register') }}'">
                 Register
             </button>
+        </div>
     </div>
+        <div>
+            @if(session('success'))
+                <div class="alert alert-success mt-4 text-green-500">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
+            @if($errors->any())
+                <div class="mt-4 text-red-500">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li class="px-4 py-2 bg-red-100">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
 </x-layout>
