@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('message');
             $table->string('attachment')->nullable();
             $table->timestamps();
+            $table->string('status')->default('open');
             
         });
     }

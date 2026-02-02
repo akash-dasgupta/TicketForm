@@ -17,4 +17,13 @@ class TicketViewer extends Controller
         }
         return view('ticketviewer', compact('tickets'));
     }
+
+    public function viewticket($ticket_id)
+    {
+        $ticket = Ticket::find($ticket_id);
+        if (!$ticket) {
+            return redirect()->route('ticket.view')->with('error', 'Ticket not found.');
+        }
+        return view('ticket_detail', compact('ticket'));
+    }
 }
