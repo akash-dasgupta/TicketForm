@@ -28,7 +28,7 @@ Route::get('/staff-register', [AuthController::class,'staffregisterview'])->name
 Route::post('staff.login', [AuthController::class,'stafflogin'])->name('staff.login');
 Route::post('staff.register', [AuthController::class,'staffregister'])->name('staff.register');
 Route::get('/tickets', [TicketViewer::class,'ticketlist'])->name('ticket.view')->middleware('auth');
-// Route::get('/tickets/{ticket_id}', [TicketViewer::class,'viewticket'])->name('ticket.view.single');
+Route::get('/tickets/{ticket_id}', [TicketViewer::class,'viewticket'])->name('ticket.view.single');
 Route::post('staff.logout', [AuthController::class,'stafflogout'])->name('staff.logout');
 
 

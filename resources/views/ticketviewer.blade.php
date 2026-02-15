@@ -70,7 +70,13 @@
         <tbody>
             @foreach ($tickets as $tickets)
             <tr>
-                <td class="border border-gray-400 p-2">{{ $tickets->ticket_id }}</td>
+                <td class="border border-gray-400 p-2">
+                    <a href="{{ route('ticket.view.single', ['ticket_id' => $tickets->ticket_id]) }}">
+                        <div class="text-blue-600 hover:underline">
+                            {{ $tickets->ticket_id }}
+                        </div>
+                    </a>
+                </td>
                 <td class="border border-gray-400 p-2">{{ $tickets->name }}</td>
                 <td class="border border-gray-400 p-2">{{ $tickets->email }}</td>
                 <td class="border border-gray-400 p-2">{{ $tickets->phone }}</td>

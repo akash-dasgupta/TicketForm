@@ -8,7 +8,7 @@
     <body class="flex flex-col items-center justify-center min-h-screen">
 <div>
     <!-- Life is available only in the present moment. - Thich Nhat Hanh -->
-    <h1 class="text-3xl text-center font-bold underline centered m-4">Ticket #{{ $ticket->id }}</h1>
+    <h1 class="text-3xl text-center font-bold underline centered m-4">Ticket #{{ $ticket->ticket_id }}</h1>
     <div class="card border border-gray-400 p-4 m-4">
         <div class="card-body">
             <p><strong>Name:</strong> {{ $ticket->name }}</p>
