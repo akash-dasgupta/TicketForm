@@ -37,6 +37,14 @@
                 </h4>
             </div>
             <div class="card-body">
+                <div class="mb-4 flex justify-center gap-4">
+                    <a href="{{ route('ticket.view') }}?status=OPEN" class="bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer font-bold py-2 px-4 focus:outline-none focus:shadow-outline">
+                        Open Tickets
+                    </a>
+                    <a href="{{ route('ticket.view') }}?status=CLOSED" class="bg-red-600 text-white rounded hover:bg-red-700 cursor-pointer font-bold py-2 px-4 focus:outline-none focus:shadow-outline">
+                        Closed Tickets
+                    </a>
+                </div>
                 <form action="{{ route('ticket.view') }}" method="GET" class="form-inline">
                     <div class="form-group mb-2 grid grid-cols-6 gap-2">
                         <select name="criteria" id="criteria" class="border border-gray-300 rounded px-2 py-1 col-span-1">
@@ -45,6 +53,7 @@
                             <option value="email">Email</option>
                             <option value="phone">Phone</option>
                             <option value="message">Message</option>
+                            <option value="status">Status</option>
                         </select>
                         <input type="text" id="search" name="search" class="border border-gray-300 rounded px-2 py-1 col-span-4">
                         <button type="submit" class="bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer col-span-1">Search</button>
@@ -64,7 +73,8 @@
                 <th class="border border-gray-400 p-2">Email</th>
                 <th class="border border-gray-400 p-2">Phone</th>
                 <th class="border border-gray-400 p-2">Message</th>
-                <th class="border border-gray-400 p-2">Attachment</th>
+                <th class="border border-gray-400 p-2">Status</th>
+                <th class="border border-gray-400 p-2">Last Updated</th>
             </tr>
         </thead>
         <tbody>
@@ -81,7 +91,8 @@
                 <td class="border border-gray-400 p-2">{{ $tickets->email }}</td>
                 <td class="border border-gray-400 p-2">{{ $tickets->phone }}</td>
                 <td class="border border-gray-400 p-2">{{ $tickets->message }}</td>
-                <td class="border border-gray-400 p-2">{{ $tickets->attachment }}</td>
+                <td class="border border-gray-400 p-2">{{ $tickets->status }}</td>
+                <td class="border border-gray-400 p-2">{{ $tickets->updated_at }}</td>
             </tr>
             @endforeach
         </tbody>

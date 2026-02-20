@@ -10,7 +10,11 @@ class TicketViewer extends Controller
     public function ticketlist()
     {
         $tickets = Ticket::all();
-        if(request()->has('search') && request()->has('criteria')){
+        if(request()->has('status')) {
+            $status = request()->input('status');
+            $tickets = Ticket::where('status', $status)->get();
+        }
+        if(request()->has('search') && request()->has('criteria')) {
             $search = request()->input('search');
             $criteria = request()->input('criteria');
             $tickets = Ticket::where($criteria, 'like', "%$search%")->get();
